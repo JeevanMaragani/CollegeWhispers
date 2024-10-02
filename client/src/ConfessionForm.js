@@ -57,8 +57,8 @@ const ConfessionForm = ({ addConfession }) => {
 
     return (
         <>
-            <div className="min-h-screen flex items-center justify-center bg-[#FDF3F3]">
-                <div className="bg-[#FFEB99] p-8 rounded-lg shadow-lg w-full max-w-md">
+            <div className="min-h-screen flex items-center justify-center bg-white">
+                <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
                     <h2 className="text-3xl font-bold text-center text-[#FF6F61] mb-6">
                         Share Your story here🥰.
                     </h2>
@@ -96,6 +96,9 @@ const ConfessionForm = ({ addConfession }) => {
                                     <option value="Love">Love</option>
                                     <option value="Academics">Academics</option>
                                     <option value="Campus Life">Campus Life</option>
+                                    <option value="Embarassing Moments">Embarassing Moments</option>
+                                    <option value="Crush">Crush</option>
+                                    <option value="Advice">Advice</option>
                                 </select>
                             </div>
 

@@ -29,7 +29,7 @@ const MyCollegePage = () => {
 
     return (
         <div className="max-w-3xl mx-auto p-8">
-            <h2 className="text-3xl font-bold text-[#6C63FF] mb-4">Confessions from My College</h2>
+            <h2 className="text-3xl font-bold text-[#E0E0E0] mb-4">Confessions from My College</h2>
             {error && <div className="text-red-600 text-center">{error}</div>}
             <ConfessionList confessions={confessions} />
             <FAB /> 
