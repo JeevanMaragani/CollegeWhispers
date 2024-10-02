@@ -1,0 +1,40 @@
+import React, { useState, useEffect } from 'react';
+import ConfessionList from '../ConfessionList';
+import FAB from '../components/FAB'; 
+
+const MyCollegePage = () => {
+    const [confessions, setConfessions] = useState([]);
+    const [error, setError] = useState(null); // State to handle errors
+
+    useEffect(() => {
+        const fetchConfessions = async () => {
+            try {
+                const response = await fetch('http://localhost:5000/api/confessions');
+
+                if (!response.ok) {
+                    throw new Error('Failed to fetch confessions. Please try again.');
+                }
+
+                const data = await response.json();
+                setConfessions(data);
+                setError(null); // Clear any previous errors
+
+            } catch (error) {
+                setError(error.message); // Set error message
+            }
+        };
+
+        fetchConfessions();
+    }, []);
+
+    return (
+        <div className="max-w-3xl mx-auto p-8">
+            <h2 className="text-3xl font-bold text-[#6C63FF] mb-4">Confessions from My College</h2>
+            {error && <div className="text-red-600 text-center">{error}</div>}
+            <ConfessionList confessions={confessions} />
+            <FAB /> 
+        </div>
+    );
+};
+
+export default MyCollegePage;
