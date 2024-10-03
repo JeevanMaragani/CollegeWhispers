@@ -9,7 +9,7 @@ const MyCollegePage = () => {
     useEffect(() => {
         const fetchConfessions = async () => {
             try {
-                const response = await fetch('https://collegewhispers-backend.onrender.com');
+                const response = await fetch('https://collegewhispers-backend.onrender.com/api/confessions');
 
                 if (!response.ok) {
                     throw new Error('Failed to fetch confessions. Please try again.');
