@@ -26,3 +26,5 @@ yarn-error.log*
 
 # Ignore OS-specific hidden files
 Thumbs.db
+#Ignore the .env file
+.env

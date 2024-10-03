@@ -23,7 +23,7 @@ const ConfessionForm = ({ addConfession }) => {
         const newConfession = { text, category }; // Removed enableChat
 
         try {
-            const response = await fetch('http://localhost:5000/api/confessions', {
+            const response = await fetch('https://collegewhispers-backend.onrender.com', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
