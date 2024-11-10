@@ -12,13 +12,15 @@ const PORT = process.env.PORT || 5000;
 // Middleware
 app.use(express.json());
 
+
 // Configure CORS to allow requests from both the frontend (Netlify) and localhost (for development)
 app.use(cors({
     origin: [
         'http://localhost:3000', // Allow local development on localhost:3000
         'https://collegewhispers.netlify.app' // Replace with your actual Netlify URL
     ],
-    methods: ['GET', 'POST', 'PUT', 'DELETE'], // Specify allowed HTTP methods
+
+
     credentials: true, // If you need cookies to be sent between frontend and backend
 }));
 
