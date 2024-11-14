@@ -4,7 +4,7 @@ const ConfessionForm = ({ addConfession }) => {
     const [text, setText] = useState('');
     const [category, setCategory] = useState('');
     const [submitted, setSubmitted] = useState(false);
-    const [error, setError] = useState(null); // State to handle errors
+    const [error, setError] = useState(null);
 
     const maxCharLimit = 500;
 
@@ -17,54 +17,45 @@ const ConfessionForm = ({ addConfession }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
         if (!text.trim()) return;
 
-        const newConfession = { text, category }; // Removed enableChat
+        const newConfession = { text, category };
 
         try {
             const response = await fetch('https://collegewhispers-backend.onrender.com/api/confessions', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(newConfession),
             });
 
-            if (!response.ok) {
-                throw new Error('Failed to submit confession. Please try again.');
-            }
-
+            if (!response.ok) throw new Error('Failed to submit confession. Please try again.');
+            
             const data = await response.json();
             addConfession(data);
 
             setSubmitted(true);
-            setError(null); // Clear any previous errors
+            setError(null);
 
             setTimeout(() => {
                 setSubmitted(false);
             }, 3000);
 
         } catch (error) {
-            setError(error.message); // Set error message
+            setError(error.message);
         }
     };
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-white">
-            <div className="bg-white p-4 sm:p-6 rounded-lg shadow-lg w-full max-w-lg sm:max-w-2xl"> {/* Increased width, reduced padding */}
-                <h2 className="text-3xl font-bold text-center text-[#FF6F61] mb-4"> {/* Reduced margin-bottom */}
-                    Share Your story here🥰.
-                </h2>
+            <div className="bg-white p-4 sm:p-6 rounded-lg shadow-lg w-full max-w-lg sm:max-w-2xl">
+                <h2 className="text-3xl font-bold text-center text-[#FF6F61] mb-4">Share Your story here🥰.</h2>
 
                 {error && <div className="text-red-600 text-center mb-4">{error}</div>}
 
                 {submitted ? (
-                    <div className="text-green-600 text-center">
-                        Your story has been successfully submitted!
-                    </div>
+                    <div className="text-green-600 text-center">Your story has been successfully submitted!</div>
                 ) : (
-                    <form onSubmit={handleSubmit} className="space-y-3"> {/* Reduced space between form elements */}
+                    <form onSubmit={handleSubmit} className="space-y-3">
                         {/* Category Field */}
                         <div>
                             <label className="block text-[#FF6F61] font-bold mb-1">Category:</label>
@@ -92,7 +83,7 @@ const ConfessionForm = ({ addConfession }) => {
                                 placeholder="What's on your mind?"
                                 maxLength={maxCharLimit}
                                 required
-                                className="w-full p-4 h-40 sm:h-48 border border-[#FF6F61] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FF6F61] bg-white shadow-sm placeholder-opacity-50" // Adjusted height to make it more compact
+                                className="w-full p-4 h-40 sm:h-48 border border-[#FF6F61] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FF6F61] bg-white shadow-sm placeholder-opacity-50"
                             />
                             <p className="text-right text-sm text-gray-500">{text.length}/{maxCharLimit} characters</p>
                         </div>

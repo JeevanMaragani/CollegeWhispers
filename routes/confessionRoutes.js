@@ -6,19 +6,19 @@ const Confession = require('../models/Confession');
 // @desc    Create a new confession
 router.post('/', async (req, res) => {
     try {
-        const { text, author } = req.body;
+        const { text, author, category } = req.body;
 
         // Set default author to "Anonymous" if not provided
         const confessionAuthor = author || 'Anonymous';
 
-        // Create a new confession
+        // Create a new confession with the category included
         const newConfession = new Confession({
             text,
-            author: confessionAuthor
+            author: confessionAuthor,
+            category  // Add the category field here
         });
 
         await newConfession.save();
-
         res.json(newConfession);
     } catch (err) {
         console.error(err.message);
@@ -35,27 +35,6 @@ router.get('/', async (req, res) => {
     } catch (err) {
         console.error(err.message);
         res.status(500).send('Server Error');
-    }
-});
-
-// @route   PUT /api/confessions/:id/like
-// @desc    Like a confession
-router.put('/:id/like', async (req, res) => {
-    try {
-        const confession = await Confession.findById(req.params.id);
-        if (!confession) {
-            return res.status(404).json({ message: 'Confession not found' });
-        }
-        
-        // Increment the likes count
-        confession.likes += 1;
-        await confession.save();
-        
-        // Send back the updated confession
-        res.json(confession);
-    } catch (error) {
-        console.error(error.message);
-        res.status(500).json({ message: 'Server error' });
     }
 });
 
