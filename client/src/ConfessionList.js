@@ -1,6 +1,17 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { WhatsappShareButton, WhatsappIcon } from 'react-share';
-import { AiOutlineShareAlt, AiFillInstagram } from 'react-icons/ai';
+import React, { useRef } from 'react';
+import { AiOutlineShareAlt } from 'react-icons/ai';
+import html2canvas from 'html2canvas';
+
+// Define color classes for each category and a default color
+const categoryColors = {
+    Love: 'bg-red-100 text-red-800',
+    Academics: 'bg-green-100 text-green-800',
+    "Campus Life": 'bg-blue-100 text-blue-800',
+    "Embarrassing Moments": 'bg-yellow-100 text-yellow-800',
+    Crush: 'bg-pink-100 text-pink-800',
+    Advice: 'bg-purple-100 text-purple-800',
+    Default: 'bg-gray-100 text-gray-800',
+};
 
 const ConfessionList = ({ confessions }) => {
     return (
@@ -19,56 +30,74 @@ const ConfessionList = ({ confessions }) => {
 };
 
 const ConfessionItem = ({ confession }) => {
-    const [showShareOptions, setShowShareOptions] = useState(false);
-    const dropdownRef = useRef(null);
-    const buttonRef = useRef(null);
+    const cardRef = useRef(null);  // Reference to capture the confession card
+    const shareButtonRef = useRef(null);  // Reference to the share button
 
-    const shareUrl = `https://mycollegewhispers.com/confession/${confession._id}`;
-    const title = confession.text.slice(0, 100) + "...";
+    const categoryClass = confession.category ? categoryColors[confession.category] : categoryColors.Default;
 
-    const toggleShareOptions = () => {
-        setShowShareOptions((prev) => !prev);
-    };
-
-    // Close share options when clicking outside
-    useEffect(() => {
-        const handleClickOutside = (event) => {
-            if (
-                dropdownRef.current &&
-                !dropdownRef.current.contains(event.target) &&
-                buttonRef.current &&
-                !buttonRef.current.contains(event.target)
-            ) {
-                setShowShareOptions(false);
+    // Capture confession card as an image without watermark
+    const handleImageShare = async () => {
+        if (cardRef.current) {
+            // Temporarily hide the share button for the capture
+            if (shareButtonRef.current) {
+                shareButtonRef.current.style.display = 'none';
             }
-        };
-        document.addEventListener('mousedown', handleClickOutside);
-        return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
-        };
-    }, []);
 
-    const handleMouseLeave = () => {
-        setTimeout(() => {
-            if (
-                dropdownRef.current && 
-                buttonRef.current &&
-                !dropdownRef.current.matches(':hover') &&
-                !buttonRef.current.matches(':hover')
-            ) {
-                setShowShareOptions(false);
+            // Capture the card with higher quality and custom settings
+            const canvas = await html2canvas(cardRef.current, {
+                scale: 3,  // Increase scale for better quality
+                useCORS: true,
+                width: cardRef.current.clientWidth,
+                height: cardRef.current.clientHeight,
+                backgroundColor: null,  // Keep background transparent if desired
+            });
+
+            // Restore the share button visibility after capture
+            if (shareButtonRef.current) {
+                shareButtonRef.current.style.display = 'block';
             }
-        }, 200);
+
+            // Convert to blob and share
+            canvas.toBlob((blob) => {
+                if (navigator.share && blob) {
+                    const file = new File([blob], "confession.png", { type: "image/png" });
+                    navigator.share({
+                        files: [file],
+                        title: "Check out this confession!",
+                    }).catch(console.error);
+                } else {
+                    // Fallback: Download image if sharing is unsupported
+                    const link = document.createElement("a");
+                    link.href = canvas.toDataURL("image/png");
+                    link.download = "confession.png";
+                    link.click();
+                }
+            });
+        }
     };
 
     return (
-        <li className="bg-[#FDF3F3] p-8 rounded-lg shadow-lg border border-gray-200 hover:shadow-2xl transition-shadow duration-300">
+        <li ref={cardRef} className="bg-[#FDF3F3] p-8 rounded-lg shadow-lg border border-gray-200 hover:shadow-2xl transition-shadow duration-300">
             <div className="flex items-center space-x-2 mb-3">
                 <strong className="text-[#FF6F61] font-semibold text-lg">
                     {confession.author || 'Anonymous'}
                 </strong>
+                
+                {/* Only display category if it exists */}
                 {confession.category && (
-                    <span className="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded-full">
+                    <span 
+                        className={`px-3 py-1 rounded-full text-xs font-semibold ${categoryClass}`}
+                        style={{
+                            display: 'inline-block',
+                            lineHeight: '1',
+                            textAlign: 'center',
+                            minWidth: '50px',
+                            maxWidth: '100px',
+                            overflow: 'hidden',
+                            whiteSpace: 'nowrap',
+                            textOverflow: 'ellipsis',
+                        }}
+                    >
                         {confession.category}
                     </span>
                 )}
@@ -82,36 +111,13 @@ const ConfessionItem = ({ confession }) => {
                     {new Date(confession.date).toLocaleString()}
                 </small>
 
-                <div className="relative" onMouseLeave={handleMouseLeave}>
-                    <button
-                        ref={buttonRef}
-                        onClick={toggleShareOptions}
-                        className="p-2 bg-gray-300 rounded-full hover:bg-gray-400 transition"
-                    >
-                        <AiOutlineShareAlt className="h-6 w-6" />
-                    </button>
-
-                    {showShareOptions && (
-                        <div
-                            ref={dropdownRef}
-                            className="absolute right-0 mt-2 p-2 bg-white border border-gray-200 shadow-lg rounded-lg z-10"
-                        >
-                            <div className="flex space-x-2">
-                                <WhatsappShareButton url={shareUrl} title={title}>
-                                    <WhatsappIcon size={32} round={true} />
-                                </WhatsappShareButton>
-                                <a
-                                    href={`https://www.instagram.com/`}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="flex items-center justify-center w-8 h-8 rounded-full bg-pink-500 text-white"
-                                >
-                                    <AiFillInstagram className="h-6 w-6" />
-                                </a>
-                            </div>
-                        </div>
-                    )}
-                </div>
+                <button
+                    ref={shareButtonRef}
+                    onClick={handleImageShare}
+                    className={`p-2 rounded-full transition ${categoryClass}`}
+                >
+                    <AiOutlineShareAlt className="h-6 w-6" />
+                </button>
             </div>
         </li>
     );
