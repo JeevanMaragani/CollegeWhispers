@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
 import { AiOutlineShareAlt } from 'react-icons/ai';
+import { motion } from 'framer-motion'; // Import Framer Motion
 import html2canvas from 'html2canvas';
 
 // Define color classes for each category and a default color
@@ -14,24 +15,44 @@ const categoryColors = {
 };
 
 const ConfessionList = ({ confessions }) => {
+    // Animation settings for the container (staggered animation for child elements)
+    const containerVariants = {
+        hidden: { opacity: 0 },
+        visible: {
+            opacity: 1,
+            transition: {
+                staggerChildren: 0.2, // Stagger each child animation
+            },
+        },
+    };
+
+    // Animation settings for individual confession cards
+    const cardVariants = {
+        hidden: { opacity: 0, y: 20 }, // Start slightly below and invisible
+        visible: { opacity: 1, y: 0 }, // Move into view
+    };
+
     return (
-        <div className="max-w-3xl mx-auto mt-6 space-y-4">
+        <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+            className="max-w-3xl mx-auto mt-6 space-y-4 list-none" // Add list-none class here to remove bullets
+        >
             {confessions.length > 0 ? (
-                <ul className="space-y-4">
-                    {confessions.map((confession) => (
-                        <ConfessionItem key={confession._id} confession={confession} />
-                    ))}
-                </ul>
+                confessions.map((confession) => (
+                    <ConfessionItem key={confession._id} confession={confession} variants={cardVariants} />
+                ))
             ) : (
                 <p className="text-gray-500">No confessions yet.</p>
             )}
-        </div>
+        </motion.div>
     );
 };
 
-const ConfessionItem = ({ confession }) => {
-    const cardRef = useRef(null);  // Reference to capture the confession card
-    const shareButtonRef = useRef(null);  // Reference to the share button
+const ConfessionItem = ({ confession, variants }) => {
+    const cardRef = useRef(null); // Reference to capture the confession card
+    const shareButtonRef = useRef(null); // Reference to the share button
 
     const categoryClass = confession.category ? categoryColors[confession.category] : categoryColors.Default;
 
@@ -45,11 +66,11 @@ const ConfessionItem = ({ confession }) => {
 
             // Capture the card with higher quality and custom settings
             const canvas = await html2canvas(cardRef.current, {
-                scale: 3,  // Increase scale for better quality
+                scale: 3, // Increase scale for better quality
                 useCORS: true,
                 width: cardRef.current.clientWidth,
                 height: cardRef.current.clientHeight,
-                backgroundColor: null,  // Keep background transparent if desired
+                backgroundColor: null, // Keep background transparent if desired
             });
 
             // Restore the share button visibility after capture
@@ -77,15 +98,19 @@ const ConfessionItem = ({ confession }) => {
     };
 
     return (
-        <li ref={cardRef} className="bg-[#FDF3F3] p-8 rounded-lg shadow-lg border border-gray-200 hover:shadow-2xl transition-shadow duration-300">
+        <motion.li
+            ref={cardRef}
+            variants={variants} // Apply Framer Motion animation variants
+            className="bg-[#FDF3F3] p-8 rounded-lg shadow-lg border border-gray-200 hover:shadow-2xl transition-shadow duration-300"
+        >
             <div className="flex items-center space-x-2 mb-3">
                 <strong className="text-[#FF6F61] font-semibold text-lg">
                     {confession.author || 'Anonymous'}
                 </strong>
-                
+
                 {/* Only display category if it exists */}
                 {confession.category && (
-                    <span 
+                    <span
                         className={`px-3 py-1 rounded-full text-xs font-semibold ${categoryClass}`}
                         style={{
                             display: 'inline-block',
@@ -102,7 +127,7 @@ const ConfessionItem = ({ confession }) => {
                     </span>
                 )}
             </div>
-            
+
             {/* Display Confession Text */}
             <p className="text-gray-700 text-base mb-4">{confession.text}</p>
 
@@ -119,7 +144,7 @@ const ConfessionItem = ({ confession }) => {
                     <AiOutlineShareAlt className="h-6 w-6" />
                 </button>
             </div>
-        </li>
+        </motion.li>
     );
 };
 

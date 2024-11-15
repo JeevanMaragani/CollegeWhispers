@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useSwipeable } from 'react-swipeable';
 import ConfessionList from '../ConfessionList';
 import FAB from '../components/FAB';
+import SkeletonLoader from '../components/SkeletonLoader';
 
 const ExplorePage = () => {
     const [confessions, setConfessions] = useState([]);
@@ -46,8 +47,11 @@ const ExplorePage = () => {
             className="max-w-3xl mx-auto p-4 sm:p-6 lg:p-8"
         >
             {isLoading ? (
-                <div className="text-center text-lg text-gray-700">
-                    Loading... <span role="img" aria-label="hourglass">⏳</span>
+                <div className="space-y-6">
+                    {/* Render multiple skeleton loaders */}
+                    <SkeletonLoader />
+                    <SkeletonLoader />
+                    <SkeletonLoader />
                 </div>
             ) : error ? (
                 <div className="text-red-600 text-center">{error}</div>
