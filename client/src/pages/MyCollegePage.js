@@ -7,12 +7,14 @@ import FAB from '../components/FAB';
 
 const MyCollegePage = () => {
     const [confessions, setConfessions] = useState([]);
-    const [error, setError] = useState(null); // State to handle errors
+    const [isLoading, setIsLoading] = useState(true); // Loading state
+    const [error, setError] = useState(null); // Error state
     const navigate = useNavigate(); // Hook to navigate between pages
 
     useEffect(() => {
         const fetchConfessions = async () => {
             try {
+                setIsLoading(true); // Start loading
                 const response = await fetch('https://collegewhispers-backend.onrender.com/api/confessions');
 
                 if (!response.ok) {
@@ -22,9 +24,10 @@ const MyCollegePage = () => {
                 const data = await response.json();
                 setConfessions(data);
                 setError(null); // Clear any previous errors
-
             } catch (error) {
                 setError(error.message); // Set error message
+            } finally {
+                setIsLoading(false); // End loading
             }
         };
 
@@ -42,9 +45,18 @@ const MyCollegePage = () => {
             {...handlers} // Attach swipe handlers to the container
             className="max-w-3xl mx-auto p-4 sm:p-6 lg:p-8"
         >
-            {error && <div className="text-red-600 text-center">{error}</div>}
-            <ConfessionList confessions={confessions} />
-            <FAB /> 
+            {isLoading ? (
+                <div className="text-center text-lg text-gray-700">
+                    Loading... <span role="img" aria-label="hourglass">⏳</span>
+                </div>
+            ) : error ? (
+                <div className="text-red-600 text-center">{error}</div>
+            ) : confessions.length === 0 ? (
+                <div className="text-center text-gray-500">No confessions yet.</div>
+            ) : (
+                <ConfessionList confessions={confessions} />
+            )}
+            <FAB />
         </div>
     );
 };
