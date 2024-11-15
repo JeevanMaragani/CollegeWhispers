@@ -28,8 +28,10 @@ const ExplorePage = () => {
     }, []);
 
     return (
-        <div className="max-w-3xl mx-auto p-8">
-            <h2 className="text-3xl font-bold text-[#E0E0E0] mb-4">Explore Confessions</h2>
+        <div className="max-w-3xl mx-auto p-4 sm:p-6 lg:p-8">
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-[#E0E0E0] mb-2 sm:mb-4 text-center">
+            
+            </h2>
             {error && <div className="text-red-600 text-center">{error}</div>}
             <ConfessionList confessions={confessions} />
             <FAB /> 

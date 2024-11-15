@@ -1,6 +1,7 @@
+// whisper/client/src/pages/MyCollegePage.js
 import React, { useState, useEffect } from 'react';
 import ConfessionList from '../ConfessionList';
-import FAB from '../components/FAB'; 
+import FAB from '../components/FAB';
 
 const MyCollegePage = () => {
     const [confessions, setConfessions] = useState([]);
@@ -28,8 +29,7 @@ const MyCollegePage = () => {
     }, []);
 
     return (
-        <div className="max-w-3xl mx-auto p-8">
-            <h2 className="text-3xl font-bold text-[#E0E0E0] mb-4">Confessions from My College</h2>
+        <div className="max-w-3xl mx-auto p-4 sm:p-6 lg:p-8">
             {error && <div className="text-red-600 text-center">{error}</div>}
             <ConfessionList confessions={confessions} />
             <FAB /> 
