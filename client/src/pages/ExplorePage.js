@@ -1,10 +1,14 @@
+// whisper/client/src/pages/ExplorePage.js
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useSwipeable } from 'react-swipeable';
 import ConfessionList from '../ConfessionList';
-import FAB from '../components/FAB'; 
+import FAB from '../components/FAB';
 
 const ExplorePage = () => {
     const [confessions, setConfessions] = useState([]);
     const [error, setError] = useState(null); // State to handle errors
+    const navigate = useNavigate(); // Hook to navigate between pages
 
     useEffect(() => {
         const fetchConfessions = async () => {
@@ -27,11 +31,17 @@ const ExplorePage = () => {
         fetchConfessions();
     }, []);
 
+    // Swipe handlers
+    const handlers = useSwipeable({
+        onSwipedRight: () => navigate('/my-college'), // Navigate to My College page
+        preventDefaultTouchmoveEvent: true,
+    });
+
     return (
-        <div className="max-w-3xl mx-auto p-4 sm:p-6 lg:p-8">
-            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-[#E0E0E0] mb-2 sm:mb-4 text-center">
-            
-            </h2>
+        <div
+            {...handlers} // Attach swipe handlers to the container
+            className="max-w-3xl mx-auto p-4 sm:p-6 lg:p-8"
+        >
             {error && <div className="text-red-600 text-center">{error}</div>}
             <ConfessionList confessions={confessions} />
             <FAB /> 
