@@ -1,43 +1,50 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
 import MyCollegePage from './pages/MyCollegePage';
 import ExplorePage from './pages/ExplorePage';
 import ConfessionFormPage from './pages/ConfessionFormPage';
+
+function Navigation() {
+    const location = useLocation();
+
+    return (
+        <nav className="bg-white border-b border-gray-200 py-4 fixed w-full top-0 z-10 flex flex-col items-center">
+            {/* Centered Logo */}
+            <h1 className="text-3xl font-extrabold text-[#FF0800] mb-2">CollegeWhispers</h1>
+
+            {/* Navigation Links */}
+            <div className="space-x-8 flex">
+                <a
+                    href="/my-college"
+                    className={`px-3 py-1 rounded-full text-lg font-semibold transition-all duration-300 ${
+                        location.pathname === '/my-college'
+                            ? 'bg-[#FF6F61] bg-opacity-50 text-white'
+                            : 'text-gray-700 hover:bg-gray-200 hover:bg-opacity-50'
+                    }`}
+                >
+                    My College
+                </a>
+                <a
+                    href="/explore"
+                    className={`px-3 py-1 rounded-full text-lg font-semibold transition-all duration-300 ${
+                        location.pathname === '/explore'
+                            ? 'bg-[#FF6F61] bg-opacity-50 text-white'
+                            : 'text-gray-700 hover:bg-gray-200 hover:bg-opacity-50'
+                    }`}
+                >
+                    Explore
+                </a>
+            </div>
+        </nav>
+    );
+}
 
 function App() {
     return (
         <Router>
             <div className="min-h-screen flex flex-col">
-                {/* Navigation Bar */}
-                <nav className="bg-white border-b border-gray-200 py-4 fixed w-full top-0 z-10 flex flex-col items-center"> 
-                    {/* Centered Logo */}
-                    <h1 className="text-3xl font-extrabold text-[#FF0800] mb-2">CollegeWhispers</h1>
-                    
-                    {/* Centered Links under the logo with tooltips */}
-                    <div className="space-x-8">
-                        <a
-                            href="/my-college"
-                            className="relative group text-gray-700 hover:text-[#FF6F61] focus:text-[#FF6F61] transition duration-300"
-                        >
-                            My College
-                            <span className="absolute left-1/2 transform -translate-x-1/2 mt-1 w-max opacity-0 group-hover:opacity-100 group-focus:opacity-100 transition-opacity bg-gray-800 text-white text-xs rounded px-2 py-1">
-                                Stories from your college
-                            </span>
-                        </a>
-                        <a
-                            href="/explore"
-                            className="relative group text-gray-700 hover:text-[#FF6F61] focus:text-[#FF6F61] transition duration-300"
-                        >
-                            Explore
-                            <span className="absolute left-1/2 transform -translate-x-1/2 mt-1 w-max opacity-0 group-hover:opacity-100 group-focus:opacity-100 transition-opacity bg-gray-800 text-white text-xs rounded px-2 py-1">
-                                Stories from other colleges
-                            </span>
-                        </a>
-                    </div>
-                </nav>
-
-                {/* Main Content */}
-                <main className="flex-grow pt-20 p-8">
+                <Navigation />
+                <main className="flex-grow pt-24 p-8">
                     <Routes>
                         <Route path="/my-college" element={<MyCollegePage />} />
                         <Route path="/explore" element={<ExplorePage />} />
