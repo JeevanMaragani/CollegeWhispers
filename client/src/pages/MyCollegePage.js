@@ -16,7 +16,7 @@ const MyCollegePage = () => {
         const fetchConfessions = async () => {
             try {
                 setIsLoading(true); // Start loading
-                const response = await fetch('https://collegewhispers-backend.onrender.com/api/confessions');
+                const response = await fetch('http://localhost:5000/api/confessions');
 
                 if (!response.ok) {
                     throw new Error('Failed to fetch confessions. Please try again.');

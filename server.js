@@ -25,6 +25,7 @@ app.use(cors({
 
 // Routes
 app.use('/api/confessions', require('./routes/confessionRoutes'));
+app.use('/api/colleges', require('./routes/collegeRoutes'));
 
 // Basic route to test
 app.get('/', (req, res) => {
